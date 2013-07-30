@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 from setuptools import find_packages
 
 setup(
@@ -7,7 +10,7 @@ setup(
     url='http://www.github.com/pod2metra/butler/',
     packages=find_packages(),
     include_package_data=True,
-    requires=[
-        'django>=1.4.3',
+    install_requires=[
+        "Django >= 1.4.3",
     ],
 )
