@@ -1,6 +1,6 @@
 from django.db import models
 
-from butler.future.tests.test_project import settings
+from django.conf import settings
 
 
 class Link(models.Model):
