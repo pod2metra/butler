@@ -14,7 +14,7 @@ setup(
             'tests',
         )
     ),
-    version='v0.1.0',
+    version=__version__,
     include_package_data=True,
     install_requires=[REQUIREMENTS],
 )
