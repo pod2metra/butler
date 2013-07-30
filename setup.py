@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import setup
+
+REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(
     name='butler',
     url='http://www.github.com/pod2metra/butler/',
-    packages=find_packages(),
+    packages=('butler',),
+    version='v0.1.0',
     include_package_data=True,
-    requires=[
-        'django>1.4',
-    ],
+    install_requires=[REQUIREMENTS],
 )
