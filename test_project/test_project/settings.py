@@ -151,3 +151,5 @@ LOGGING = {
 
 
 SHORTER_STARTER_LINK = 'zzz'
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
