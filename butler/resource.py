@@ -34,15 +34,25 @@ class DjangoResource(object):
 
     def dispatch(self, request, *args, **kwargs):
         context = Context()
-        context['request'] = request
-        context['resource'] = self
         try:
+            context['resource'] = self
+            context['request'] = self
+            context.update(kwargs)
+            context['args'] = args
             return self.workflow.run(**context)
         except exceptions.ButlerException as e:
-            return e.as_response(request, context)
+            return e.as_response(
+                request,
+                self,
+                context
+            )
         except Exception as e:
             logger.exception('some bad things happened')
-            return exceptions.ExceptionWrapper(e).as_response(request, context)
+            return exceptions.ExceptionWrapper(e).as_response(
+                request,
+                self,
+                context
+            )
 
     def get_urls(self, api_name, version):
         return None

@@ -7,7 +7,7 @@ class ButlerException(Exception):
     def __init__(self, *args, **kwargs):
         super(ButlerException, self).__init__(*args, **kwargs)
 
-    def as_response(self, request, context):
+    def as_response(self, request, resource, context):
         raise NotImplementedError()
 
 
@@ -16,13 +16,20 @@ class ExceptionWrapper(ButlerException):
         super(ExceptionWrapper, self).__init__()
         self.exception = exception
 
-    def as_response(self, request, context):
+    def as_response(self, request, resource, context):
+        import traceback
+        tb = traceback.format_exc()
+
         if not settings.DEBUG:
             return HttpResponse(
-                content='Debug mode exception'
+                content='Debug mode exception \n\n{0}'.format(
+                    tb
+                )
             )
 
         return HttpResponse(
-            content='Exception'
+            content='Exception \n\n{0}'.format(
+                tb
+            )
         )
 

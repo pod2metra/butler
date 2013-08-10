@@ -6,7 +6,7 @@ class Step(object):
     def __call__(self, **context):
         raise self.run(**context)
 
-    def run(self, **kwargs):
+    def run(self, **context):
         raise NotImplementedError()
 
 
@@ -14,19 +14,15 @@ class Placeholder(Step):
     def __init__(self, name):
         self.name = name
 
-    def __call__(self, **context):
-        return context
+    def __call__(self, **kwargs):
+        return kwargs
 
 
 class NoStepsSpecified(ButlerException):
 
-    def __init__(self, resource, *args, **kwargs):
-        super(NoStepsSpecified, self).__init__(*args, **kwargs)
-        self.resource = resource
-
-    def as_response(self, request, context):
+    def as_response(self, request, resource, context):
         error = 'No steps for {} resource specified.'.format(
-            self.resource.name
+            resource.name
         )
         return HttpResponse(
             content=error
@@ -47,7 +43,8 @@ class Workflow(Step):
             raise NoStepsSpecified(context.get('resource'))
 
         for step in self.steps:
-            context = step(**context)
+            context.update(step(**context))
+
         return context
 
     def replace(self, placeholder_name, callable_object):

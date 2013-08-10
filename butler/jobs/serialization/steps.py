@@ -3,19 +3,23 @@ from butler.jobs.workflow import Step
 
 
 class UnidentifiedFormat(ButlerException):
-    def as_response(self, request, context):
-        return super(UnidentifiedFormat, self).as_response(request, context)
+    def as_response(self, request, resource, context):
+        return super(
+            UnidentifiedFormat, self
+        ).as_response(
+            request,
+            resource,
+            context
+        )
 
 
-class ContentTypeSerializer(Step):
-
+class BaseStep(Step):
     def __init__(self, force_format=None, default_format=None):
-        super(ContentTypeSerializer, self).__init__()
+        super(BaseStep, self).__init__()
         self.format = force_format
         self.default_format = default_format
 
     def run(self, resource, request, **kwargs):
-
         if not self.format:
             self.format = request.REQUEST.get('format', None)
 
@@ -27,7 +31,20 @@ class ContentTypeSerializer(Step):
             self.format = self.default_format
 
         if not self.format:
-            print 'jooooooo'
             raise UnidentifiedFormat(request, kwargs)
 
-        return kwargs
+
+class ContentTypeSerializer(Step):
+    def run(self, resource, request, **kwargs):
+        super(ContentTypeSerializer, self).run(**kwargs)
+        return {
+            'result': ''
+        }
+
+
+class ContentTypeDeserializer(Step):
+    def run(self, **kwargs):
+        super(ContentTypeDeserializer, self).run(**kwargs)
+        return {
+            'result': ''
+        }

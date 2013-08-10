@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
-REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
-
 __version__ = '0.0.2'
 
 setup(
@@ -16,5 +14,8 @@ setup(
     ),
     version=__version__,
     include_package_data=True,
-    install_requires=[REQUIREMENTS],
+    install_requires=[
+        'xmldict==0.4.1',
+        'PyYAML==3.10',
+    ],
 )
