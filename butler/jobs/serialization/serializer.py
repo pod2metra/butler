@@ -14,7 +14,7 @@ class ContentTypeSerializer(Step):
         self.format = force_format
         self.default_format = default_format
 
-    def run(self, request, **kwargs):
+    def run(self, resource, request, **kwargs):
 
         if not self.format:
             self.format = request.REQUEST.get('format', None)
@@ -27,6 +27,7 @@ class ContentTypeSerializer(Step):
             self.format = self.default_format
 
         if not self.format:
+            print 'jooooooo'
             raise UnidentifiedFormat(request, kwargs)
 
         return kwargs

@@ -1,9 +1,12 @@
+from django.http import HttpResponse
+from butler.jobs.exceptions import ButlerException
+
 
 class Step(object):
-    def __call__(self, request, **context):
-        raise self.run(request, **context)
+    def __call__(self, **context):
+        raise self.run(**context)
 
-    def run(self, request, **kwargs):
+    def run(self, **kwargs):
         raise NotImplementedError()
 
 
@@ -15,6 +18,21 @@ class Placeholder(Step):
         return context
 
 
+class NoStepsSpecified(ButlerException):
+
+    def __init__(self, resource, *args, **kwargs):
+        super(NoStepsSpecified, self).__init__(*args, **kwargs)
+        self.resource = resource
+
+    def as_response(self, request, context):
+        error = 'No steps for {} resource specified.'.format(
+            self.resource.name
+        )
+        return HttpResponse(
+            content=error
+        )
+
+
 class Workflow(Step):
 
     def __init__(self, *steps, **kwargs):
@@ -24,9 +42,12 @@ class Workflow(Step):
     def __call__(self, **context):
         return self.run(**context)
 
-    def run(self, request, **context):
+    def run(self, **context):
+        if not self.steps:
+            raise NoStepsSpecified(context.get('resource'))
+
         for step in self.steps:
-            context = step(request, **context)
+            context = step(**context)
         return context
 
     def replace(self, placeholder_name, callable_object):
