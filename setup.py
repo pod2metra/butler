@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 REQUIREMENTS = [i.strip() for i in open("requirements.txt").readlines()]
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 setup(
     name='butler',

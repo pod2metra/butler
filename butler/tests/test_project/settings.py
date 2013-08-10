@@ -1,1 +1,0 @@
-SHORTER_STARTER_LINK = 'zzz'

@@ -1,7 +1,10 @@
 
 class Step(object):
-    def __call__(self, **context):
-        raise NotImplementedError
+    def __call__(self, request, **context):
+        raise self.run(request, **context)
+
+    def run(self, request, **kwargs):
+        raise NotImplementedError()
 
 
 class Placeholder(Step):
@@ -21,9 +24,9 @@ class Workflow(Step):
     def __call__(self, **context):
         return self.run(**context)
 
-    def run(self, **context):
+    def run(self, request, **context):
         for step in self.steps:
-            context = step(**context)
+            context = step(request, **context)
         return context
 
     def replace(self, placeholder_name, callable_object):

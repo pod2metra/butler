@@ -1,0 +1,1 @@
+from api.v0_2.resources.link import LinkResource
