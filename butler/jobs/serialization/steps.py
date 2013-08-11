@@ -1,50 +1,76 @@
+from django.http import HttpResponse
 from butler.jobs.exceptions import ButlerException
 from butler.jobs.workflow import Step
+from butler.jobs.serialization import serializers
 
 
-class UnidentifiedFormat(ButlerException):
+class ParameterNotSpecified(ButlerException):
     def as_response(self, request, resource, context):
-        return super(
-            UnidentifiedFormat, self
-        ).as_response(
-            request,
-            resource,
-            context
+        return HttpResponse(
+            content=u"Content-type, get parameter and "
+                    u"default behaviour indefined"
+        )
+
+
+class NoSerializerFound(ButlerException):
+    def __init__(self, fmt):
+        super(NoSerializerFound, self).__init__()
+        self.fmt = fmt
+
+    def as_response(self, request, resource, context):
+        return HttpResponse(
+            content=u"Unidentified format {}."
         )
 
 
 class BaseStep(Step):
     def __init__(self, force_format=None, default_format=None):
         super(BaseStep, self).__init__()
-        self.format = force_format
+        self.fmt = force_format
         self.default_format = default_format
 
-    def run(self, resource, request, **kwargs):
-        if not self.format:
-            self.format = request.REQUEST.get('format', None)
+    def get_format(self, request):
+        if self.fmt:
+            return self.fmt
 
-        if not self.format:
-            content_type = request.META.get('CONTENT_TYPE', None)
-            self.format = content_type.split('/')[-1]
+        self.fmt = request.REQUEST.get('fmt', None)
+        if self.fmt:
+            return self.fmt
 
-        if not self.format:
-            self.format = self.default_format
+        content_type = request.META.get('CONTENT_TYPE', None)
+        self.fmt = content_type.split('/')[-1]
+        if self.fmt:
+            return self.fmt
 
-        if not self.format:
-            raise UnidentifiedFormat(request, kwargs)
+        self.fmt = self.default_format
+        if self.fmt:
+            return self.fmt
+
+        raise ParameterNotSpecified()
+
+    def serializer(self, request):
+        fmt = self.get_format(request)
+        serializer = getattr(serializers, fmt, None)
+
+        if not serializer:
+            NoSerializerFound(fmt)
+
+        return serializer
 
 
-class ContentTypeSerializer(Step):
-    def run(self, resource, request, **kwargs):
-        super(ContentTypeSerializer, self).run(**kwargs)
+class ToString(BaseStep):
+    def run(self, resource, request, data, **kwargs):
+        fmt = self.get_format(request)
+        serializer = getattr(serializers, fmt, None)
         return {
-            'result': ''
+            'result': serializer.to_string(data)
         }
 
 
-class ContentTypeDeserializer(Step):
-    def run(self, **kwargs):
-        super(ContentTypeDeserializer, self).run(**kwargs)
+class FromString(BaseStep):
+    def run(self, resource, request, data, **kwargs):
+        fmt = self.get_format(request)
+        serializer = getattr(serializers, fmt, None)
         return {
-            'result': ''
+            'result': serializer.from_string(data)
         }
