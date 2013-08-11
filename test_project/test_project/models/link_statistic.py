@@ -10,3 +10,6 @@ class LinkStatistics(models.Model):
     created_count = models.IntegerField(default=0)
     # Count of redirects from short link
     redirect_count = models.IntegerField(default=0)
+
+    class Meta:
+        app_label = 'test_project'

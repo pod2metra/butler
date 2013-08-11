@@ -4,7 +4,7 @@ from butler.jobs.exceptions import ButlerException
 
 class Step(object):
     def __call__(self, **context):
-        raise self.run(**context)
+        return self.run(**context)
 
     def run(self, **context):
         raise NotImplementedError()
@@ -47,10 +47,10 @@ class Workflow(Step):
 
         return context
 
-    def replace(self, placeholder_name, callable_object):
+    def replace(self, **replacements):
         steps = []
         for step in self.steps:
-            if isinstance(step, Placeholder) and step.name == placeholder_name:
-                step = callable_object
+            if isinstance(step, Placeholder) and step.name in replacements:
+                step = replacements[step.name]
             steps.append(step)
         return self.__class__(*steps, **self.kwargs)

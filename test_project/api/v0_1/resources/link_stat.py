@@ -9,7 +9,5 @@ class LinkStatisticsResource(DjangoResource):
         process_model=ProcessDjangoModel(model_klass=LinkStatistics)
     )
 
-
-
     class Meta:
         model = LinkStatistics

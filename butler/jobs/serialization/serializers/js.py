@@ -14,7 +14,6 @@ class JsonSerializer(object):
                 return '{0:.2f}'.format(val)
 
             raise TypeError('Unable to serialize {} {}'.format(val, type(val)))
-
         return json.dumps(data, ensure_ascii=True, default=default_callback)
 
     def from_string(self, str_data):

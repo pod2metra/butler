@@ -36,10 +36,10 @@ class DjangoResource(object):
         context = Context()
         try:
             context['resource'] = self
-            context['request'] = self
+            context['request'] = request
             context.update(kwargs)
             context['args'] = args
-            return self.workflow.run(**context)
+            return self.workflow.run(**context).get('response')
         except exceptions.ButlerException as e:
             return e.as_response(
                 request,

@@ -11,3 +11,6 @@ class Link(models.Model):
     def short_link(self):
         short_link = hex(self.pk)[2:]
         return '{}/{}'.format(settings.SHORTER_STARTER_LINK, short_link)
+
+    class Meta:
+        app_label = 'test_project'

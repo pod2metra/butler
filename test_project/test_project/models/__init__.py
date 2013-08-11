@@ -1,2 +1,2 @@
-from link import Link
-from link_statistic import LinkStatistics
+from test_project.models.link import Link
+from test_project.models.link_statistic import LinkStatistics
