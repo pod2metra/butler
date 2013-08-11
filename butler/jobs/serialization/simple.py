@@ -57,7 +57,8 @@ class ToString(BaseStep):
     def perform(self, resource, request, data, **kwargs):
         serializer = self.get_serializer(request)
         return {
-            'result': serializer.to_string(data)
+            'result': serializer.to_string(data),
+            'response_content_type': serializer.content_type
         }
 
 
@@ -66,5 +67,5 @@ class FromString(BaseStep):
     def perform(self, resource, request, data, **kwargs):
         serializer = self.get_serializer(request)
         return {
-            'result': serializer.from_string(data)
+            'result': serializer.from_string(data),
         }

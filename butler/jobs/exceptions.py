@@ -1,8 +1,7 @@
-from django.conf import settings
 from django.http import HttpResponse
+from butler import settings
 
 
-# TODO: add debug info in DEBUG mode
 class ButlerException(Exception):
     def __init__(self, *args, **kwargs):
         super(ButlerException, self).__init__(*args, **kwargs)
@@ -12,9 +11,10 @@ class ButlerException(Exception):
 
 
 class ExceptionWrapper(ButlerException):
-    def __init__(self, exception):
+    def __init__(self, exception, status_code=500):
         super(ExceptionWrapper, self).__init__()
         self.exception = exception
+        self.status_code = status_code
 
     def as_response(self, request, resource, context):
         import traceback
@@ -24,12 +24,14 @@ class ExceptionWrapper(ButlerException):
             return HttpResponse(
                 content='Debug mode exception \n\n{0}'.format(
                     tb
-                )
+                ),
+                status=self.status_code
             )
 
         return HttpResponse(
             content='Exception \n\n{0}'.format(
                 tb
-            )
+            ),
+            status=self.status_code
         )
 

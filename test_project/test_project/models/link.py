@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class Link(models.Model):
-    long_link = models.URLField(editable=False)
+    long_link = models.URLField()
     created_at = models.DateTimeField(auto_created=True)
 
     @property

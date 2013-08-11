@@ -2,6 +2,7 @@ import xmldict
 
 
 class XMLSerializer(object):
+    content_type = 'application/xml'
 
     ITEM_TAG = 'item'
 
