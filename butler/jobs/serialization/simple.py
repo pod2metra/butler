@@ -1,26 +1,6 @@
-from django.http import HttpResponse
-from butler.jobs.exceptions import ButlerException
+from butler.jobs.serialization import exceptions
 from butler.jobs.workflow import Step
 from butler.jobs.serialization import serializers
-
-
-class ParameterNotSpecified(ButlerException):
-    def as_response(self, request, resource, context):
-        return HttpResponse(
-            content=u"Content-type, get parameter and "
-                    u"default behaviour indefined"
-        )
-
-
-class NoSerializerFound(ButlerException):
-    def __init__(self, fmt):
-        super(NoSerializerFound, self).__init__()
-        self.fmt = fmt
-
-    def as_response(self, request, resource, context):
-        return HttpResponse(
-            content=u"Unidentified format {}."
-        )
 
 
 class BaseStep(Step):
@@ -46,14 +26,14 @@ class BaseStep(Step):
         if self.fmt:
             return self.fmt
 
-        raise ParameterNotSpecified()
+        raise exceptions.ParameterNotSpecified()
 
     def serializer(self, request):
         fmt = self.get_format(request)
         serializer = getattr(serializers, fmt, None)
 
         if not serializer:
-            NoSerializerFound(fmt)
+            exceptions.NoSerializerFound(fmt)
 
         return serializer
 
