@@ -1,3 +1,4 @@
+from dateutil.parser import parse
 from butler.jobs.workflow import Step
 
 
@@ -8,10 +9,12 @@ class Filter(Step):
         self.model_klass = model_klass
 
     def run(self, request, **context):
-        filters = request.GET or {}
+        filters =  {}
+
+        for param, value in request.GET.iteritems():
+            filters[param] = parse(value)
 
         models = self.model_klass.objects.filter(**filters)
-
         return {
             'data': models
         }

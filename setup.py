@@ -17,5 +17,7 @@ setup(
     install_requires=[
         'xmldict==0.4.1',
         'PyYAML==3.10',
+        'python-dateutil==2.1',
+        'six==1.3.0',
     ],
 )

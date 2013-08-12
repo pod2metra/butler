@@ -14,17 +14,14 @@ class ProcessDjangoModel(RequestMethodSwitch):
             Filter(model_klass),
             ToDict(),
         )
-
         UpdateModel = Workflow(
             Filter(model_klass),
             Update(),
         )
-
         DeleteModel = Workflow(
             Filter(model_klass),
             Delete(),
         )
-
         CreateModel = Workflow(
             Create()
         )

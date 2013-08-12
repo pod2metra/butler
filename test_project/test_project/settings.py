@@ -156,4 +156,4 @@ SHORTER_STARTER_LINK = 'zzz'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-BUTLER_DATE_TIME_FORMAT = '%Y-%m-%d %T'
+BUTLER_DATE_TIME_FORMAT = '%Y-%m-%d %T%z'
