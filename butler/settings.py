@@ -14,3 +14,5 @@ if DEBUG is None:
 
 DATE_TIME_FORMAT = ga('BUTLER_DATE_TIME_FORMAT', '%Y-%m-%d %H:%M:%S')
 DATE_FORMAT = ga('BUTLER_DATE_FORMAT', '%Y-%m-%d')
+
+FILTER_SEPARATOR = '__'
