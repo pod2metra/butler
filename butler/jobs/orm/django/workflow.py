@@ -1,4 +1,4 @@
-from butler.jobs.helpers import RequestMethodSwitch
+from butler.jobs.helpers import RequestMethodSwitch, Rename
 from butler.jobs.orm.django.steps.create import Create
 from butler.jobs.orm.django.steps.filter import ModelFilter
 from butler.jobs.orm.django.steps.to_dict import ToDict
@@ -12,18 +12,21 @@ class ProcessDjangoModel(RequestMethodSwitch):
     def __init__(self, model_klass, required_filters=None, allowed_fields=None):
         GetModel = Workflow(
             ModelFilter(model_klass),
+            Rename('filtered', 'data'),
             ToDict(),
         )
         UpdateModel = Workflow(
             ModelFilter(model_klass),
-            Update(),
+            Update(model_klass),
         )
         DeleteModel = Workflow(
             ModelFilter(model_klass),
             Delete(),
         )
         CreateModel = Workflow(
-            Create()
+            Create(model_klass),
+            Rename('created', 'data'),
+            ToDict()
         )
         super(ProcessDjangoModel, self).__init__({
             'get': GetModel,

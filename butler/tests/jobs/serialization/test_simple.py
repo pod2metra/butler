@@ -1,3 +1,4 @@
+# coding=utf-8
 from functools import wraps
 from django.http import HttpRequest
 from butler.jobs.serialization.exceptions import ParameterNotSpecified
@@ -14,13 +15,10 @@ def raises(exc_klass):
                 func(*args, **kwargs)
                 no_exception = True
             except Exception as e:
-                if isinstance(e, exc_klass):
-                    assert True, 'zzz2'
-                else:
+                if not isinstance(e, exc_klass):
                     assert False, 'Wrong exception was thrown, expected {} got {} instead'.format(
                         exc_klass, e
                     )
-
             if no_exception:
                 assert False, 'No exception was thrown, expected {}'.format(
                     exc_klass
@@ -100,7 +98,7 @@ def test_format_determinition_test_exception():
     step.get_format(request)
 
 
-def test_serialization():
+def test_serialization_json():
     """ Test data serialization
     """
     from decimal import Decimal
@@ -115,7 +113,10 @@ def test_serialization():
     data = {
         'decimal': Decimal('123.45'),
         'date': today,
-        'now': now
+        'now': now,
+        'string': 'string',
+        'ustring': u'ыфвфыв',
+        'int': 23,
     }
     context = {
         'resource': None,
@@ -124,6 +125,9 @@ def test_serialization():
     }
     context.update(step(**context))
     expected = [
+        '"string": "string"',
+        '"ustring": "\u044b\u0444\u0432\u0444\u044b\u0432"',
+        '"int": 23',
         '"decimal": 123.45',
         '"date": "{}"'.format(
             ('{:' + settings.DATE_FORMAT + '}').format(today)
@@ -135,3 +139,6 @@ def test_serialization():
     actual = context['result']
     for e in expected:
         assert e in actual, '"{}" is not found in "{}"'.format(e, actual)
+
+
+# TODO: Test xml and yaml serialization

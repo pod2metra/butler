@@ -65,8 +65,8 @@ class ToString(BaseStep):
     def __init__(self, force_format=None, default_format=None):
         super(ToString, self).__init__(force_format, default_format)
         self.switch.update({
-            'get': self.perform,
-            'delete': self.perform
+            'GET': self.perform,
+            'DELETE': self.perform
         })
 
     def perform(self, resource, request, data, **kwargs):
@@ -82,5 +82,5 @@ class FromString(BaseStep):
     def perform(self, resource, request, data, **kwargs):
         serializer = self.get_serializer(request)
         return {
-            'result': serializer.from_string(data),
+            'data': serializer.from_string(data),
         }

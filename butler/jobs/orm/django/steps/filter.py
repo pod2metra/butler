@@ -1,4 +1,3 @@
-from dateutil.parser import parse
 from collections import namedtuple
 from butler import settings
 from butler.jobs.workflow import Step
@@ -39,7 +38,7 @@ class ModelFilter(Step):
             **filters
         )
         return {
-            'data': models
+            'filtered': models
         }
 
     def check_configurations(self, filter_fields):

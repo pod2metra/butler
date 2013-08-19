@@ -2,7 +2,6 @@ from butler.jobs.workflow import Step
 
 
 class RequestMethodSwitch(Step):
-
     def __init__(self, methods_workflow):
         super(RequestMethodSwitch, self).__init__()
         self.switch = {}
@@ -22,3 +21,16 @@ class RequestMethodSwitch(Step):
             return {}
 
         return workflow(**context)
+
+
+class Rename(Step):
+    def __init__(self, source_name, target_name):
+        super(Rename, self).__init__()
+        self.source_name = source_name
+        self.target_name = target_name
+
+    def run(self, **context):
+        return {
+            self.target_name: context.get(self.source_name)
+        }
+
