@@ -5,7 +5,10 @@ except ImportError:
 
 
 def ga(name, default):
-    return getattr(settings, name, default)
+    try:
+        return getattr(settings, name, default)
+    except ImportError:
+        return default
 
 DEBUG = ga('BUTLER_DEBUG', None)
 

@@ -17,10 +17,10 @@ class JsonSerializer(object):
                 return val.strftime(settings.DATE_FORMAT)
 
             if isinstance(val, decimal.Decimal):
-                return '{0:.2f}'.format(val)
+                return float('{0:.2f}'.format(val))
 
             raise TypeError('Unable to serialize {} {}'.format(val, type(val)))
         return json.dumps(data, ensure_ascii=True, default=default_callback)
 
     def from_string(self, str_data):
-        return json.loads(str_data)
+        return json.loads(str_data, ensure_ascii=True)

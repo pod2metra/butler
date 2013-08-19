@@ -9,25 +9,40 @@ class BaseStep(RequestMethodSwitch):
             'PUT': self.perform,
             'POST': self.perform,
         })
-        self.fmt = force_format
+        self.force_format = force_format
         self.default_format = default_format
 
-    def get_format(self, request):
-        if self.fmt:
-            return self.fmt
-
-        self.fmt = request.REQUEST.get('fmt', None)
-        if self.fmt:
-            return self.fmt
-
+    def get_format_from_content_type(self, request):
         content_type = request.META.get('CONTENT_TYPE', None)
-        content_type_fmt = content_type.split('/')[-1]
-        if content_type_fmt in serializers.registered:
-            return self.fmt
 
-        self.fmt = self.default_format
-        if self.fmt:
-            return self.fmt
+        if not content_type:
+            return None
+
+        content_type_fmt = content_type.split('/')[-1]
+
+        if not content_type_fmt:
+            return None
+
+        if content_type_fmt not in serializers.registered:
+            return None
+
+        return content_type_fmt
+
+    def get_format(self, request):
+        if self.force_format:
+            return self.force_format
+
+        fmt = request.GET.get('format', None)
+        if fmt and fmt in serializers.registered:
+            return fmt
+
+        fmt = self.get_format_from_content_type(request)
+        if fmt and fmt in serializers.registered:
+            return fmt
+
+        fmt = self.default_format
+        if fmt and fmt in serializers.registered:
+            return fmt
 
         raise exceptions.ParameterNotSpecified()
 

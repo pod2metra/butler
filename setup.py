@@ -9,7 +9,6 @@ setup(
     packages=find_packages(
         exclude=(
             'test_project',
-            'tests',
         )
     ),
     version=__version__,
@@ -19,5 +18,6 @@ setup(
         'PyYAML==3.10',
         'python-dateutil==2.1',
         'six==1.3.0',
+        'ujson==1.33'
     ],
 )
