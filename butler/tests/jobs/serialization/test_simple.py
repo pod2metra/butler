@@ -1,31 +1,8 @@
 # coding=utf-8
-from functools import wraps
 from django.http import HttpRequest
 from butler.jobs.serialization.exceptions import ParameterNotSpecified
 from butler.jobs.serialization.simple import ToString
-
-
-def raises(exc_klass):
-    def decorator(func):
-
-        @wraps(func)
-        def test_wraps(*args, **kwargs):
-            no_exception = False
-            try:
-                func(*args, **kwargs)
-                no_exception = True
-            except Exception as e:
-                if not isinstance(e, exc_klass):
-                    assert False, 'Wrong exception was thrown, expected {} got {} instead'.format(
-                        exc_klass, e
-                    )
-            if no_exception:
-                assert False, 'No exception was thrown, expected {}'.format(
-                    exc_klass
-                )
-        return test_wraps
-
-    return decorator
+from butler.tests.helpers import raises
 
 
 def test_format_determinition_test_get_parameter():
