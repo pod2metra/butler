@@ -2,6 +2,9 @@ try:
     from django.conf import settings
 except ImportError:
     settings = {}
+else:
+    if not settings.configured:
+        settings.configure()
 
 
 def ga(name, default):

@@ -37,5 +37,9 @@ nosetests.xml
 .idea
 .tmp
 .tmpDist
+.ropeproject
 # Mac
 .DS_Store
+
+# test_project
+test_project/butler

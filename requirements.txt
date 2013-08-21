@@ -1,4 +1,13 @@
-ujson
-nose2==0.4.7
+-e git@github.com:pod2metra/butler.git#egg=butler
+cov-core==1.7
+coverage==3.6
+django-nose2==0.1.1
 Django>=1.4.3
-nose==1.3.0
+nose2==0.4.7
+nose2-cov==1.0a4
+python-dateutil==2.1
+PyYAML==3.10
+six==1.3.0
+ujson==1.33
+wsgiref==0.1.2
+xmldict==0.4.1
