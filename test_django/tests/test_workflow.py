@@ -43,6 +43,7 @@ class ResourceTest(test.TestCase):
             method_foo = method_dict[method]
         except KeyError:
             raise Exception('Unkonwn method {}'.format(method))
+
         serialize_foo = self._get_serializer(format)
         deserialize_foo = self._get_deserializer(format)
         if get_params is not None and not isinstance(get_params, basestring):
@@ -79,8 +80,5 @@ class ResourceTest(test.TestCase):
 
 class WorkflowTest(ResourceTest):
 
-    def test_shit(self):
-        self.assertFalse(True)
-
     def test_link_getter(self):
-        data = self.get('/internal/v0.1/link/')
+        self.get('/internal/v0.1/link/')

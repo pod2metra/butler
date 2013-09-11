@@ -1,6 +1,6 @@
 # Django settings for test_project project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 BUTLER_DEBUG = DEBUG
 
@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'link_sorter',
     'butler',
     'test_project',
     'django_nose',
@@ -158,3 +159,5 @@ SHORTER_STARTER_LINK = 'zzz'
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 BUTLER_DATE_TIME_FORMAT = '%Y-%m-%d %T%z'
+
+SECRET_KEY = 'u53$yc-zk@sqq7yby$u_jm=k)t6f2=qf&revv0wn^hyj@x&-#e'
