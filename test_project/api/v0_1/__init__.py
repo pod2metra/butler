@@ -6,7 +6,7 @@ api = Api(
     'internal',
     'v0.1',
     resources=[
-        resources.LinkResource(),
-        resources.LinkStatisticsResource()
+        resources.LinkResource(name='link'),
+        resources.LinkStatisticsResource(name='link_static')
     ]
 )

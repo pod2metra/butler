@@ -1,7 +1,7 @@
-from api.v0_1 import base_workflow
 from butler.jobs.orm.django.workflow import ProcessDjangoModel
 from butler.resource import DjangoResource
-from test_project.models import Link
+from link_sorter.models import Link
+from api.v0_1 import base_workflow
 
 
 class LinkResource(DjangoResource):
