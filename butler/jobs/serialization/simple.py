@@ -12,22 +12,6 @@ class BaseStep(RequestMethodSwitch):
         self.force_format = force_format
         self.default_format = default_format
 
-    def get_format_from_content_type(self, request):
-        content_type = request.META.get('CONTENT_TYPE', None)
-
-        if not content_type:
-            return None
-
-        content_type_fmt = content_type.split('/')[-1]
-
-        if not content_type_fmt:
-            return None
-
-        if content_type_fmt not in serializers.registered:
-            return None
-
-        return content_type_fmt
-
     def get_format(self, request):
         if self.force_format:
             return self.force_format
@@ -36,7 +20,7 @@ class BaseStep(RequestMethodSwitch):
         if fmt and fmt in serializers.registered:
             return fmt
 
-        fmt = self.get_format_from_content_type(request)
+        fmt = get_format_from_content_type(request)
         if fmt and fmt in serializers.registered:
             return fmt
 
@@ -60,6 +44,23 @@ class BaseStep(RequestMethodSwitch):
         raise NotImplementedError()
 
 
+def get_format_from_content_type(request):
+    content_type = request.META.get('CONTENT_TYPE', None)
+
+    if not content_type:
+        return None
+
+    content_type_fmt = content_type.split('/')[-1]
+
+    if not content_type_fmt:
+        return None
+
+    if content_type_fmt not in serializers.registered:
+        return None
+
+    return content_type_fmt
+
+
 class ToString(BaseStep):
 
     def __init__(self, force_format=None, default_format=None):
@@ -79,8 +80,8 @@ class ToString(BaseStep):
 
 class FromString(BaseStep):
 
-    def perform(self, resource, request, data, **kwargs):
+    def perform(self, resource, request, data=None, **kwargs):
         serializer = self.get_serializer(request)
         return {
-            'data': serializer.from_string(data),
+            'data': serializer.from_string(data or request.body),
         }

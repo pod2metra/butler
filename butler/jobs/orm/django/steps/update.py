@@ -23,6 +23,6 @@ class Update(Step):
         )
         return {
             "data": {
-                "updated": count
+                "updated": count or 0
             }
         }

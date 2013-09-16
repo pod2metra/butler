@@ -42,8 +42,13 @@ class Workflow(Step):
         if not self.steps:
             raise NoStepsSpecified(context.get('resource'))
 
-        for step in self.steps:
-            context.update(step(**context))
+        try:
+            for step in self.steps:
+                context.update(step(**context))
+        except ButlerException, e:
+            raise e
+        except Exception, e:
+            raise e
 
         return context
 

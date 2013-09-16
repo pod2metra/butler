@@ -34,9 +34,7 @@ class RequestMethodSwitch(Step):
 
         method = request.method.lower()
 
-        print self.switch
         workflow = self.switch.get(method)
-        print workflow
         if not workflow:
             return {}
 
