@@ -4,6 +4,7 @@ from butler.jobs.orm.django.steps.filter import ModelFilter
 from butler.jobs.orm.django.steps.to_dict import ToDict
 from butler.jobs.orm.django.steps.update import Update
 from butler.jobs.orm.django.steps.delete import Delete
+from butler.jobs.orm.django.steps.limit import Limit
 from butler.jobs.workflow import Workflow
 
 
@@ -13,6 +14,7 @@ class ProcessDjangoModel(RequestMethodSwitch):
         GetModel = Workflow(
             ModelFilter(model_klass),
             Rename('filtered', 'data'),
+            Limit(),
             ToDict(),
         )
         UpdateModel = Workflow(
