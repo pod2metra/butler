@@ -12,7 +12,7 @@ class ToDict(Step):
         if fields is None:
             return model_dict
         keys = set(model_dict.keys())
-        to_delete = keys - self.allowed_fields
+        to_delete = keys - set(fields)
         for key in to_delete:
             model_dict.pop(key)
         return model_dict
