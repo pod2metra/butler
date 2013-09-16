@@ -39,7 +39,7 @@ class ModelFilter(Step):
         # 1) from resource
         # 2) from initial kwargs
         # 3) default model manager
-        resource_model_manager = getattr(resource._meta, 'model_manager')
+        resource_model_manager = getattr(resource._meta, 'model_manager', None)
         self.manager = resource_model_manager or self.manager
         if not self.manager:
             self.manager = self.model_klass.objects
