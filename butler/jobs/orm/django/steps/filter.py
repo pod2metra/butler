@@ -10,7 +10,7 @@ FilterConfiguration = namedtuple('FilterConfiguration', [
 
 class ModelFilter(Step):
 
-    def __init__(self, model_klass, filter_configurations=None):
+    def __init__(self, model_klass, manager=None, filter_configurations=None):
         super(ModelFilter, self).__init__()
         self.model_klass = model_klass
         self.fields = {}
@@ -19,8 +19,9 @@ class ModelFilter(Step):
             self.fields[field.name] = field
 
         self.filter_configurations = filter_configurations
+        self.manager = manager
 
-    def run(self, request, **context):
+    def run(self, request, resource, **context):
         filters = {}
 
         filter_fields = set()
@@ -34,7 +35,16 @@ class ModelFilter(Step):
         if self.filter_configurations:
             self.check_configurations(filter_fields)
 
-        models = self.model_klass.objects.filter(
+        # get model manager priority
+        # 1) from resource
+        # 2) from initial kwargs
+        # 3) default model manager
+        resource_model_manager = getattr(resource._meta, 'model_manager')
+        self.manager = resource_model_manager or self.manager
+        if not self.manager:
+            self.manager = self.model_klass.objects
+
+        models = self.manager.filter(
             **filters
         )
         return {
