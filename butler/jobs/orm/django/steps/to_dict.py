@@ -3,7 +3,27 @@ from butler.jobs.workflow import Step
 
 
 class ToDict(Step):
-    def run(self, data, **context):
+    def __init__(self, allowed_fields=None):
+        super(ToDict, self).__init__()
+        self.allowed_fields = allowed_fields
+
+    def model_to_dict(self, model, fields):
+        model_dict = model_to_dict(model)
+        if fields is None:
+            return model_dict
+        keys = set(model_dict.keys())
+        to_delete = keys - self.allowed_fields
+        for key in to_delete:
+            model_dict.pop(key)
+        return model_dict
+
+    def run(self, data, resource, **context):
+        allowed_fields = self.allowed_fields
+        if allowed_fields:
+            allowed_fields = resource._meta.allowed_fields
+
         return {
-            'data': [model_to_dict(model) for model in data]
+            'data': [
+                self.model_to_dict(model, allowed_fields) for model in data
+            ]
         }
