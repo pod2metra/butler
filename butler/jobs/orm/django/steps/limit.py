@@ -4,7 +4,7 @@ from butler.jobs.workflow import Step
 class Limit(Step):
 
     def __init__(self, limit=None):
-        super(ModelLimit, self).__init__()
+        super(Limit, self).__init__()
         self.limit = limit
 
     def run(self, request, data, resource, **context):
