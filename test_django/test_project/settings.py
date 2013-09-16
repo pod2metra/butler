@@ -1,6 +1,6 @@
 # Django settings for test_project project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 BUTLER_DEBUG = DEBUG
 
@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'butler',
     'test_project',
     'django_nose',
+    'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
