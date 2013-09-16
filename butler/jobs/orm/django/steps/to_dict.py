@@ -19,8 +19,8 @@ class ToDict(Step):
 
     def run(self, data, resource, **context):
         allowed_fields = self.allowed_fields
-        if allowed_fields:
-            allowed_fields = resource._meta.allowed_fields
+        if not allowed_fields:
+            allowed_fields = getattr(resource._meta, 'allowed_fields', None)
 
         return {
             'data': [
