@@ -8,14 +8,15 @@ class ToDict(Step):
         self.allowed_fields = allowed_fields
 
     def model_to_dict(self, model, fields):
-        model_dict = model_to_dict(model)
-        if fields is None:
-            return model_dict
-        keys = set(model_dict.keys())
-        to_delete = keys - set(fields)
-        for key in to_delete:
-            model_dict.pop(key)
-        return model_dict
+        res = {}
+
+        if not fields:
+            return model_to_dict(model)
+
+        for field in fields:
+            res[field] = getattr(model, field)
+        return res
+
 
     def run(self, data, resource, **context):
         allowed_fields = self.allowed_fields
