@@ -23,9 +23,17 @@ class InheritedMetaClass(type):
         dct['_meta'] = _meta
         return meta_class
 
-    def __new__(cls, name, bases, dct):
-        InheritedMetaClass.inherit_meta(bases, dct)
-        return type.__new__(cls, name, bases, dct)
+    def __new__(cls, name, bases, attrs):
+        InheritedMetaClass.inherit_meta(bases, attrs)
+        new_class = type.__new__(cls, name, bases, attrs)
+
+        for obj_name, obj in attrs.items():
+            if hasattr(obj, 'contribute_to_class'):
+                obj.contribute_to_class(obj_name, new_class)
+
+        return new_class
+
+
 
     def __init__(cls, what, bases=None, dict=None):
         super(InheritedMetaClass, cls).__init__(what, bases, dict)
