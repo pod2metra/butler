@@ -48,7 +48,7 @@ def build_model_to_dict_description(klass, related_klass=None, allowed_fields=No
     description = descriptions[(klass, related_klass)]
 
     if description:
-        return
+        return description
 
     for field in fields:
         name = field.name
