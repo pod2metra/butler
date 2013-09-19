@@ -1,3 +1,4 @@
+from butler import settings
 from django import test
 from django.core import urlresolvers
 from test_django.link_sorter.models import Link
@@ -34,7 +35,7 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
 
         obj = python_data[0]
 
-        for field in ['long_link', 'id']:
+        for field in ['long_link', 'id', 'created_at']:
             msg = '{} not found in {}'
             self.assertTrue(field in obj, msg.format(
                 field, obj
@@ -53,18 +54,28 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
             self.url,
             data=self.NEW_OBJECT_DATA
         )
+        link = Link.objects.all()[0]
         self.assertEquals(data.status_code, 200)
-        self.assertEquals(data.content, '[{"long_link": "http://sergey.co.il", "id": 1}]')
+        self.assertEquals(
+            data.content,
+            '[{{"created_at": "{}", "long_link": "http://sergey.co.il", "id": 1}}]'.format(
+                link.created_at.strftime(settings.DATE_TIME_FORMAT)
+            )
+        )
+
 
     def test_delete_one(self):
         data = self.post(
             self.url,
             data=self.NEW_OBJECT_DATA
         )
+        link = Link.objects.all()[0]
         self.assertEquals(data.status_code, 200)
         self.assertEquals(
             data.content,
-            '[{"long_link": "http://sergey.co.il", "id": 1}]'
+            '[{{"created_at": "{}", "long_link": "http://sergey.co.il", "id": 1}}]'.format(
+                link.created_at.strftime(settings.DATE_TIME_FORMAT)
+            )
         )
         data = self.delete(
             self.url,

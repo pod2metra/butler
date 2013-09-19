@@ -10,6 +10,7 @@ class JsonSerializer(object):
     def to_string(self, data):
 
         def default_callback(val):
+
             if isinstance(val, datetime.datetime):
                 return val.strftime(settings.DATE_TIME_FORMAT)
 

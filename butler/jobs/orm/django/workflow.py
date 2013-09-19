@@ -11,11 +11,15 @@ from butler.jobs.workflow import Workflow
 class ProcessDjangoModel(RequestMethodSwitch):
 
     def __init__(self, model_klass, required_filters=None, allowed_fields=None):
+        ToDictInstance = ToDict(
+            model_klass=model_klass,
+            allowed_fields=allowed_fields
+        )
         GetModel = Workflow(
             ModelFilter(model_klass),
             Rename('filtered', 'data'),
             Limit(),
-            ToDict(),
+            ToDictInstance,
         )
         UpdateModel = Workflow(
             ModelFilter(model_klass),
@@ -28,7 +32,7 @@ class ProcessDjangoModel(RequestMethodSwitch):
         CreateModel = Workflow(
             Create(model_klass),
             Rename('created', 'data'),
-            ToDict()
+            ToDictInstance,
         )
         super(ProcessDjangoModel, self).__init__({
             'get': GetModel,
