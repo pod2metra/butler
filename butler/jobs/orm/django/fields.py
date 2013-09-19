@@ -34,10 +34,6 @@ class RelatedField(BaseField):
 
 
 class PropertyField(BaseField):
-    def __init__(self, allowed_fields):
-        super(PropertyField, self).__init__()
-        self.allowed_fields = allowed_fields
-
     def contribute_to_class(self, key, klass):
         model = klass._meta.model
         description_key = (model, None)
