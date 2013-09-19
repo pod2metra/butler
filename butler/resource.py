@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from butler.jobs import exceptions
 from butler.jobs.context import Context
@@ -32,6 +33,7 @@ class DjangoResource(object):
         self.name = name or meta_name or self.__class__.__name__.lower()
         self.workflow = workflow
 
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         context = Context()
         try:
