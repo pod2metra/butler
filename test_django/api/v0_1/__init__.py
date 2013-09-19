@@ -7,6 +7,6 @@ api = Api(
     'v0.1',
     resources=[
         resources.LinkResource(name='link'),
-        resources.LinkStatisticsResource(name='link_static')
+        resources.LinkStatisticsResource(name='link_stat')
     ]
 )

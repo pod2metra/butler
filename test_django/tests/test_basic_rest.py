@@ -63,7 +63,6 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
             )
         )
 
-
     def test_delete_one(self):
         data = self.post(
             self.url,
@@ -88,7 +87,3 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
             data.content,
             '{"deleted": 1}'
         )
-
-
-
-

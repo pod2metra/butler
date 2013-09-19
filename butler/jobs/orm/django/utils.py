@@ -30,7 +30,10 @@ def get_relation_converter(field_name, key):
 
 
 def build_model_to_dict_description(klass, related_klass=None):
-    fields = klass._meta.fields
+    if related_klass:
+        fields = related_klass._meta.fields
+    else:
+        fields = klass._meta.fields
 
     description = descriptions[(klass, related_klass)]
 
@@ -60,7 +63,6 @@ def build_model_to_dict_description(klass, related_klass=None):
 def model_to_dict(model, key=None):
     klass = type(model)
     description = descriptions.get(key or (klass, None))
-
     if not description:
         return forms.model_to_dict(model)
 
