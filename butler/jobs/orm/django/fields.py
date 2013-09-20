@@ -57,7 +57,6 @@ class PropertyField(BaseField):
             converter = get_simple_converter(key)
 
         description[key] = converter
-        print description_key, description
 
 
 
