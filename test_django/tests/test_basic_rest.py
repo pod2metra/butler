@@ -1,3 +1,4 @@
+import ujson
 from butler import settings
 from django import test
 from django.core import urlresolvers
@@ -7,13 +8,19 @@ from test_django.tests.test_workflow import RestResourceTest
 
 class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
 
+    LONG_LINK = u'http://sergey.co.il'
+
     NEW_OBJECT_DATA = {
-        'long_link': 'http://sergey.co.il'
+        'long_link': LONG_LINK
     }
 
     def __init__(self, methodName='runTest'):
         super(DjangoOrmRestResourceTest, self).__init__(methodName)
         self.url = urlresolvers.reverse(viewname='internal_v0.1_link')
+
+    def convert_response(self, data):
+        data = ujson.loads(data)
+        return data
 
     def test_get_none(self):
         self.assertEquals(self.url, '/internal/v0.1/link/')
@@ -56,12 +63,17 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
         )
         link = Link.objects.all()[0]
         self.assertEquals(data.status_code, 200)
-        self.assertEquals(
-            data.content,
-            '[{{"created_at": "{}", "long_link": "http://sergey.co.il", "id": 1}}]'.format(
-                link.created_at.strftime(settings.DATE_TIME_FORMAT)
-            )
-        )
+        expected_data = [
+            {
+                u'created_at': u'{}'.format(link.created_at.strftime(
+                    settings.DATE_TIME_FORMAT)),
+                u'long_link': self.LONG_LINK,
+                u'id': 1,
+                u'stat': [],
+            }
+        ]
+        response_data = self.convert_response(data.content)
+        self.assertListEqual(expected_data, response_data)
 
     def test_delete_one(self):
         data = self.post(
@@ -70,12 +82,17 @@ class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
         )
         link = Link.objects.all()[0]
         self.assertEquals(data.status_code, 200)
-        self.assertEquals(
-            data.content,
-            '[{{"created_at": "{}", "long_link": "http://sergey.co.il", "id": 1}}]'.format(
-                link.created_at.strftime(settings.DATE_TIME_FORMAT)
-            )
-        )
+        expected_data = [
+            {
+                u'created_at': u'{}'.format(link.created_at.strftime(
+                    settings.DATE_TIME_FORMAT)),
+                u'long_link': self.LONG_LINK,
+                u'id': 1,
+                u'stat': [],
+            }
+        ]
+        response_data = self.convert_response(data.content)
+        self.assertListEqual(expected_data, response_data)
         data = self.delete(
             self.url,
             filters={
