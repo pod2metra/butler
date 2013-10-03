@@ -6,7 +6,7 @@ from test_django.link_sorter.models import Link
 from test_django.tests.test_workflow import RestResourceTest
 
 
-class DjangoOrmRestResourceTest(RestResourceTest, test.TestCase):
+class DjangoOrmRestResourceTest(RestResourceTest):
 
     LONG_LINK = u'http://sergey.co.il'
 
