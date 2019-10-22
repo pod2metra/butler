@@ -15,7 +15,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'xmldict==0.4.1',
-        'PyYAML==3.10',
+        'PyYAML==5.1',
         'python-dateutil==2.1',
         'six==1.3.0',
         'ujson==1.33'
